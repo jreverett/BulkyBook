@@ -1,7 +1,7 @@
-﻿@model BulkyBook.Models.Category
+﻿@model BulkyBook.Models.CoverType
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var title = "Create Category";
+    var title = "Create Cover Type";
 }
 
 <form method="post">
@@ -10,7 +10,7 @@
         @if (Model.Id != 0)
         {
             // Edit
-            title = "Edit Category";
+            title = "Edit Cover Type";
         }
         <div class="col-12 border-bottom">
             <h2 class="text-primary">@title</h2>
@@ -31,7 +31,8 @@
                     {
                         // Edit
                         <partial name="_EditAndBackToListButton" model="Model.Id" />
-                    } else
+                    }
+                    else
                     {
                         // Create
                         <partial name="_CreateAndBackToListButton" />
@@ -42,6 +43,6 @@
     </div>
 </form>
 
-@section Scripts { 
+@section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
