@@ -19,7 +19,7 @@ function loadDataTable() {
                             <a class="btn btn-success text-white" href="/Admin/Category/Upsert/${data}" style="cursor: pointer">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a class="btn btn-danger text-white" style="cursor: pointer">
+                            <a class="btn btn-danger text-white" onclick=Delete("/Admin/Category/Delete/${data}") style="cursor: pointer">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </div>
@@ -29,3 +29,28 @@ function loadDataTable() {
         ]
     });
 };
+
+function Delete(url) {
+    swal({
+        title: "Are you sure you want to delete this category?",
+        text: "This action cannot be undone",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        dataTable.ajax.reload();
+                    } else {
+                        toastr.error(data.message);
+                    }
+                }
+            });
+        }
+    });
+}

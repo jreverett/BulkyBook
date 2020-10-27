@@ -52,6 +52,45 @@ namespace BulkyBook.Areas.Admin.Controllers
             return Json(new { data = categories });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Upsert(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                if (category.Id == 0)
+                {
+                    // Create
+                    unitOfWork.Category.Add(category);
+                } else
+                {
+                    // Edit
+                    unitOfWork.Category.Update(category);
+                }
+
+                unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(category);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var category = unitOfWork.Category.Get(id);
+
+            if (category == null)
+            {
+                return Json(new { success = false, message = $"A category with ID '{id}' could not be found" });
+            }
+
+            unitOfWork.Category.Remove(category);
+            unitOfWork.Save();
+
+            return Json(new { success = true, message = $"Category '{category.Name}' has been deleted" });
+        }
+
         #endregion
     }
 }
