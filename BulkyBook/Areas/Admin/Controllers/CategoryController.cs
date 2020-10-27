@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BulkyBook.DataAccess.Repository.IRepository;
+﻿using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,7 +58,8 @@ namespace BulkyBook.Areas.Admin.Controllers
                 {
                     // Create
                     unitOfWork.Category.Add(category);
-                } else
+                }
+                else
                 {
                     // Edit
                     unitOfWork.Category.Update(category);
