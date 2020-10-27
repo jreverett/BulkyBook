@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
+using BulkyBook.Utility;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyBook.Areas.Admin.Controllers
@@ -34,7 +36,10 @@ namespace BulkyBook.Areas.Admin.Controllers
             }
 
             // EDIT
-            coverType = unitOfWork.CoverType.Get(id.GetValueOrDefault());
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", id);
+
+            coverType = unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameters);
             if (coverType == null)
             {
                 return NotFound();
@@ -48,7 +53,7 @@ namespace BulkyBook.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var coverTypes = unitOfWork.CoverType.GetAll();
+            var coverTypes = unitOfWork.SP_Call.List<CoverType>(SD.Proc_CoverType_GetAll, null);
             return Json(new { data = coverTypes });
         }
 
@@ -58,18 +63,21 @@ namespace BulkyBook.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Name", coverType.Name);
+
                 if (coverType.Id == 0)
                 {
                     // Create
-                    unitOfWork.CoverType.Add(coverType);
+                    unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Create, parameters);
                 }
                 else
                 {
                     // Edit
-                    unitOfWork.CoverType.Update(coverType);
+                    parameters.Add("@Id", coverType.Id);
+                    unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Update, parameters);
                 }
 
-                unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
 
@@ -79,15 +87,17 @@ namespace BulkyBook.Areas.Admin.Controllers
         [HttpDelete]
         public IActionResult Delete(int id)
         {
-            var coverType = unitOfWork.CoverType.Get(id);
+            var parameters = new DynamicParameters();
+            parameters.Add("@Id", id);
+
+            var coverType = unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameters);
 
             if (coverType == null)
             {
                 return Json(new { success = false, message = $"A cover type with ID '{id}' could not be found" });
             }
 
-            unitOfWork.CoverType.Remove(coverType);
-            unitOfWork.Save();
+            unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Delete, parameters);
 
             return Json(new { success = true, message = $"Cover type '{coverType.Name}' has been deleted" });
         }
