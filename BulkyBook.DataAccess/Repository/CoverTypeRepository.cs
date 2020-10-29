@@ -1,7 +1,6 @@
 ﻿using BulkyBook.DataAccess.Data;
 using BulkyBook.DataAccess.Repository.IRepository;
 using BulkyBook.Models;
-using System.Linq;
 
 namespace BulkyBook.DataAccess.Repository
 {
@@ -16,11 +15,11 @@ namespace BulkyBook.DataAccess.Repository
 
         public void Update(CoverType coverType)
         {
-            var coverTypeFromDb = db.CoverTypes.FirstOrDefault(x => x.Id == coverType.Id);
+            var coverTypeFromDb = db.CoverTypes.Find(coverType.Id);
 
             if (coverTypeFromDb != null)
             {
-                coverTypeFromDb.Name = coverType.Name;
+                db.Entry(coverTypeFromDb).CurrentValues.SetValues(coverType);
             }
         }
     }
