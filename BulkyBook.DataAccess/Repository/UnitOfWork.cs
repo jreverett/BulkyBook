@@ -10,6 +10,7 @@ namespace BulkyBook.DataAccess.Repository
         public UnitOfWork(ApplicationDbContext db)
         {
             this.db = db;
+            ApplicationUser = new ApplicationUserRepository(this.db);
             Category = new CategoryRepository(this.db);
             Company = new CompanyRepository(this.db);
             CoverType = new CoverTypeRepository(this.db);
@@ -17,6 +18,7 @@ namespace BulkyBook.DataAccess.Repository
             SP_Call = new SP_Call(this.db);
         }
 
+        public IApplicationUserRepository ApplicationUser { get; private set; }
         public ICategoryRepository Category { get; private set; }
         public ICompanyRepository Company { get; private set; }
         public ICoverTypeRepository CoverType { get; private set; }
