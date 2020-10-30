@@ -12,6 +12,7 @@ namespace BulkyBook.DataAccess.Repository
             this.db = db;
             Category = new CategoryRepository(this.db);
             CoverType = new CoverTypeRepository(this.db);
+            Product = new ProductRepository(this.db);
             SP_Call = new SP_Call(this.db);
         }
 
