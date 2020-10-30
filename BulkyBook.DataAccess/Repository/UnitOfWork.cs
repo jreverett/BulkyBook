@@ -11,12 +11,14 @@ namespace BulkyBook.DataAccess.Repository
         {
             this.db = db;
             Category = new CategoryRepository(this.db);
+            Company = new CompanyRepository(this.db);
             CoverType = new CoverTypeRepository(this.db);
             Product = new ProductRepository(this.db);
             SP_Call = new SP_Call(this.db);
         }
 
         public ICategoryRepository Category { get; private set; }
+        public ICompanyRepository Company { get; private set; }
         public ICoverTypeRepository CoverType { get; private set; }
         public IProductRepository Product { get; private set; }
         public ISP_Call SP_Call { get; private set; }
